@@ -2,6 +2,6 @@
 
 require '../lib/truthtable'
 
-puts TruthTable.new("(a & b) | c", 3) {|a, b, c| (a & b) | c }
 puts TruthTable.new("a ^ b", 2) {|a, b| a ^ b }
-puts TruthTable.new("(a & b) | (c & d)", 4) {|a, b, c, d| (a & b) | (c & d) }
+puts TruthTable.new("(a & b) | (c & d)") {|a, b, c, d| (a & b) | (c & d) }
+puts TruthTable.new("a | b")
