@@ -18,7 +18,10 @@
 require 'set'
 
 # This class represents a truth table.  A truth table can be constructed for
-# any boolean expression that Ruby understands.
+# any boolean expression that Ruby understands.  Example usage:
+#   puts TruthTable.new("a ^ b", 2) {|x, y| x ^ y }
+#   puts TruthTable.new("(a & b) | (c & d)") {|a, b, c, d| (a & b) | (c & d) }
+#   puts TruthTable.new("a | b")
 class TruthTable
   VERSION = "1.0.0"
 
@@ -32,8 +35,8 @@ class TruthTable
     @expression = expression
     
     @size ||= Set.new(@formula.gsub(/[^[:alpha:]]/, "").split(//)).size
-    @expression ||= eval("Proc.new {|a,b| #{formula} }")
-    
+    @expression ||= eval("Proc.new {|#{@formula.gsub(/[^[:alpha:]]/, "").split(//).join(',')}| #{formula} }")
+        
     @string = ""
     
     column = "a"    
@@ -44,7 +47,7 @@ class TruthTable
     
     @string << @formula << "\n"
   
-    values = generate_values(@size)  
+    values = generate_values(@size)
     values.each do |entry|
       entry.each do |value|
         @string << "#{value}\t"
