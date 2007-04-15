@@ -31,17 +31,22 @@ class TruthTable
     @variables = @formula.gsub(/[^[:alpha:]\s]/, " ").split(" ").uniq    
     @expression ||= eval("Proc.new {|#{@variables.join(',')}| #{formula} }")      
     @values = generate_values(@variables.size)
+    
+    @results = []
+    @values.each do |entry|
+      @results << @expression.call(*entry)
+    end    
   end
   
   def to_s
     string = @variables.join("\t") + "\t#{@formula}\n"
   
-    @values.each do |entry|
+    @values.each_with_index do |entry, i|
       entry.each do |value|
         string << "#{value}\t"
       end
   
-      string << @expression.call(*entry).to_s << "\n"
+      string << @results[i].to_s << "\n"
     end
     
     string << "\n"
