@@ -25,4 +25,9 @@ require 'rubygems'
 require 'truthtable'
 require 'rdoc/usage'
 
-puts TruthTable.new(ARGV[0]) rescue puts "\nUsage\n-----\n  truthtable \"(a & b) | c\""; raise
+begin
+  puts TruthTable.new(ARGV[0]) 
+rescue 
+  puts "\nUsage\n-----\n  truthtable \"(a & b) | c\""
+  raise
+end
