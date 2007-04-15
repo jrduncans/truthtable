@@ -35,7 +35,7 @@ class TruthTable
     @expression = expression
     
     @size ||= Set.new(@formula.gsub(/[^[:alpha:]]/, "").split(//)).size
-    @expression ||= eval("Proc.new {|#{@formula.gsub(/[^[:alpha:]]/, "").split(//).join(',')}| #{formula} }")
+    @expression ||= eval("Proc.new {|#{@formula.gsub(/[^[:alpha:]]/, "").split(//).sort.join(',')}| #{formula} }")
         
     @string = ""
     
