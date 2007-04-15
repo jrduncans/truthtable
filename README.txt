@@ -13,7 +13,7 @@ Builder for boolean truth tables.
 
 == SYNOPSIS:
 
-  puts TruthTable.new("a & b", 2) {|a, b| a & b }
+  truthtable "a & b"
 
 == REQUIREMENTS:
 
