@@ -30,7 +30,7 @@ class TruthTable
     @expression = expression
     
     # Should .sort be put back on the end of this line?
-    variables = @formula.gsub(/[^[:alpha:]\s]/, "").split(" ").uniq
+    variables = @formula.gsub(/[^[:alpha:]\s]/, " ").split(" ").uniq
     
     @expression ||= eval("Proc.new {|#{variables.join(',')}| #{formula} }")
         
