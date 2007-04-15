@@ -21,9 +21,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 require 'rubygems'
 require 'truthtable'
 require 'rdoc/usage'
 
-puts TruthTable.new(ARGV[0]) rescue RDoc::usage('usage')
+puts TruthTable.new(ARGV[0]) rescue puts "\nUsage\n-----\n  truthtable \"(a & b) | c\""; raise
