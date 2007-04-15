@@ -15,8 +15,6 @@
 # Copyright::	Copyright 2006 Stephen Duncan Jr
 # License::	Apache License, Version 2.0
 
-require 'set'
-
 # This class represents a truth table.  A truth table can be constructed for
 # any boolean expression that Ruby understands.  Example usage:
 #   puts TruthTable.new("a ^ b", 2) {|x, y| x ^ y }
@@ -34,15 +32,16 @@ class TruthTable
     @size = size
     @expression = expression
     
-    @size ||= Set.new(@formula.gsub(/[^[:alpha:]]/, "").split(//)).size
-    @expression ||= eval("Proc.new {|#{@formula.gsub(/[^[:alpha:]]/, "").split(//).sort.join(',')}| #{formula} }")
+    # Should .sort be put back on the end of this line?
+    variables = @formula.gsub(/[^[:alpha:]\s]/, "").split(" ").uniq
+    
+    @size ||= variables.size
+    @expression ||= eval("Proc.new {|#{variables.join(',')}| #{formula} }")
         
     @string = ""
     
-    column = "a"    
-    @size.times do
+    variables.each do |column|
       @string << "#{column}\t"
-      column.next!
     end
     
     @string << @formula << "\n"
