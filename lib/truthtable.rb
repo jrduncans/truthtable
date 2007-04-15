@@ -28,34 +28,23 @@ class TruthTable
   def initialize(formula, &expression)
     @formula = formula
     @expression = expression
-    
-    # Should .sort be put back on the end of this line?
-    variables = @formula.gsub(/[^[:alpha:]\s]/, " ").split(" ").uniq
-    
-    @expression ||= eval("Proc.new {|#{variables.join(',')}| #{formula} }")
-        
-    @string = ""
-    
-    variables.each do |column|
-      @string << "#{column}\t"
-    end
-    
-    @string << @formula << "\n"
-  
-    values = generate_values(variables.size)
-    values.each do |entry|
-      entry.each do |value|
-        @string << "#{value}\t"
-      end
-  
-      @string << @expression.call(*entry).to_s << "\n"
-    end
-    
-    @string << "\n"
+    @variables = @formula.gsub(/[^[:alpha:]\s]/, " ").split(" ").uniq    
+    @expression ||= eval("Proc.new {|#{@variables.join(',')}| #{formula} }")      
+    @values = generate_values(@variables.size)
   end
   
   def to_s
-    @string
+    string = @variables.join("\t") + "\t#{@formula}\n"
+  
+    @values.each do |entry|
+      entry.each do |value|
+        string << "#{value}\t"
+      end
+  
+      string << @expression.call(*entry).to_s << "\n"
+    end
+    
+    string << "\n"
   end
 
   private
@@ -64,28 +53,13 @@ class TruthTable
   # for the a number values equal to the provided size.
   def generate_values(size)
     values = []
-    row = Array.new(size, false)
-  
-    (2**size).times do
-      values << row.dup
-      get_next(row)
+    
+    var_masks = (0..size-1).to_a.reverse.map {|i| 2**i }
+    
+    0.upto(2**@variables.length-1) do |cnt_mask|
+      values << var_masks.map {|var_mask| (var_mask & cnt_mask) == var_mask }
     end
-  
+    
     return values
-  end
-  
-  # Gets the next row by "adding" to the given to the end of the row
-  # if no index is given.
-  def get_next(row, index = nil)
-    index ||= row.size - 1
-  
-    if row[index] == false
-      row[index] = true
-    else
-      row[index] = false
-      row[0..(index - 1)] = get_next(row, index - 1)[0..(index - 1)]
-    end
-  
-    return row
   end
 end
