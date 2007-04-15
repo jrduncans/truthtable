@@ -11,11 +11,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Author::	Stephen Duncan Jr (mailto:jrduncans@stephenducanjr.com)
+# Copyright::	Copyright 2006 Stephen Duncan Jr
+# License::	Apache License, Version 2.0
+
 require 'set'
 
+# This class represents a truth table.  A truth table can be constructed for
+# any boolean expression that Ruby understands.
 class TruthTable
   VERSION = "1.0.0"
 
+  # Creates a truth table.  If no block is given, then the provided formula will
+  # be used as the expression, otherwise the formula will just be used for display
+  # purposes.  If size is not given, then the number of unique alphabetic characters
+  # in the formula will be used.
   def initialize(formula, size = nil, &expression)
     @formula = formula
     @size = size
