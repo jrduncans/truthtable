@@ -9,7 +9,7 @@ Builder for boolean truth tables.
 == FEATURES/PROBLEMS:
   
 * Builds truth tables
-* Requires duplication of formula as string and as block
+* Should field order be alphabetical, or by order of appearance?
 
 == SYNOPSIS:
 
