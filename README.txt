@@ -21,7 +21,7 @@ Builder for boolean truth tables.
 
 == INSTALL:
 
-* sudo gem install truthtable
+* rake install_gem
 
 == LICENSE:
 
