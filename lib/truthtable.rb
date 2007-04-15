@@ -17,25 +17,21 @@
 
 # This class represents a truth table.  A truth table can be constructed for
 # any boolean expression that Ruby understands.  Example usage:
-#   puts TruthTable.new("a ^ b", 2) {|x, y| x ^ y }
-#   puts TruthTable.new("(a & b) | (c & d)") {|a, b, c, d| (a & b) | (c & d) }
+#   puts TruthTable.new("a ^ b") {|x, y| x ^ y }
 #   puts TruthTable.new("a | b")
 class TruthTable
   VERSION = "1.0.0"
 
   # Creates a truth table.  If no block is given, then the provided formula will
   # be used as the expression, otherwise the formula will just be used for display
-  # purposes.  If size is not given, then the number of unique alphabetic characters
-  # in the formula will be used.
-  def initialize(formula, size = nil, &expression)
+  # purposes.
+  def initialize(formula, &expression)
     @formula = formula
-    @size = size
     @expression = expression
     
     # Should .sort be put back on the end of this line?
     variables = @formula.gsub(/[^[:alpha:]\s]/, "").split(" ").uniq
     
-    @size ||= variables.size
     @expression ||= eval("Proc.new {|#{variables.join(',')}| #{formula} }")
         
     @string = ""
@@ -46,7 +42,7 @@ class TruthTable
     
     @string << @formula << "\n"
   
-    values = generate_values(@size)
+    values = generate_values(variables.size)
     values.each do |entry|
       entry.each do |value|
         @string << "#{value}\t"
@@ -64,6 +60,8 @@ class TruthTable
 
   private
 
+  # Generates a two-dimensional array containing the table of values
+  # for the a number values equal to the provided size.
   def generate_values(size)
     values = []
     row = Array.new(size, false)
@@ -76,6 +74,8 @@ class TruthTable
     return values
   end
   
+  # Gets the next row by "adding" to the given to the end of the row
+  # if no index is given.
   def get_next(row, index = nil)
     index ||= row.size - 1
   
