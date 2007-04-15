@@ -26,4 +26,4 @@ require 'rubygems'
 require 'truthtable'
 require 'rdoc/usage'
 
-puts TruthTable.new(ARGV[0])
+puts TruthTable.new(ARGV[0]) rescue RDoc::usage('usage')
