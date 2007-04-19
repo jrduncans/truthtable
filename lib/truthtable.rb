@@ -28,14 +28,14 @@ class TruthTable
   def initialize(formula, &expression)
     @formula = formula
     @expression = expression
-    @variables = @formula.gsub(/[^[:alpha:]\s]/, " ").split(" ").uniq    
-    @expression ||= eval("Proc.new {|#{@variables.join(',')}| #{formula} }")      
+    @variables = @formula.gsub(/[^[:alpha:]\s]/, " ").split(" ").uniq
+    @expression ||= eval("Proc.new {|#{@variables.join(',')}| #{formula} }")
     @values = generate_values(@variables.size)
     
     @results = []
     @values.each do |entry|
       @results << @expression.call(*entry)
-    end    
+    end
   end
   
   def to_s
@@ -59,9 +59,9 @@ class TruthTable
   def generate_values(size)
     values = []
     
-    var_masks = (0..size-1).to_a.reverse.map {|i| 2**i }
+    var_masks = (0...size).to_a.reverse.map {|i| 2**i }
     
-    0.upto(2**@variables.length-1) do |cnt_mask|
+    0.upto(2**(@variables.length-1)) do |cnt_mask|
       values << var_masks.map {|var_mask| (var_mask & cnt_mask) == var_mask }
     end
     
