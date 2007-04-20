@@ -28,7 +28,7 @@ class TruthTable
   def initialize(formula, &expression)
     @formula = formula
     @expression = expression
-    @variables = @formula.gsub(/[^[:alpha:]\s]/, " ").split(" ").uniq
+    @variables = @formula.gsub(/[^[:alpha:]\s]/, " ").split(" ").uniq.sort
     @expression ||= eval("Proc.new {|#{@variables.join(',')}| #{formula} }")
     @values = generate_values(@variables.size)
     
@@ -61,7 +61,7 @@ class TruthTable
     
     var_masks = (0...size).to_a.reverse.map {|i| 2**i }
     
-    0.upto(2**(@variables.length-1)) do |cnt_mask|
+    0.upto((2**size) - 1) do |cnt_mask|
       values << var_masks.map {|var_mask| (var_mask & cnt_mask) == var_mask }
     end
     
