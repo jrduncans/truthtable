@@ -26,6 +26,7 @@ class TruthTable
   # be used as the expression, otherwise the formula will just be used for display
   # purposes.
   def initialize(formula, &expression)
+    raise 'Invalid formula' unless formula =~ /\A[()^&|!a-zA-Z\s]+\z/
     @formula = formula
     @expression = expression
     @variables = @formula.gsub(/[^[:alpha:]\s]/, " ").split(" ").uniq.sort
