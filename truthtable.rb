@@ -1,3 +1,13 @@
+#!/usr/bin/env ruby
+
+# == Synopsis
+# 
+# Outputs the truthtable for the given expression to standard-out.
+# 
+# == Usage
+# 
+#   truthtable "(a && b) || c"
+
 # Copyright 2006 Stephen Duncan Jr
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +24,9 @@
 # Author::	Stephen Duncan Jr (mailto:jrduncans@stephenducanjr.com)
 # Copyright::	Copyright 2006 Stephen Duncan Jr
 # License::	Apache License, Version 2.0
+
+require 'table_print'
+require 'optparse'
 
 # This class represents a truth table.  A truth table can be constructed for
 # any boolean expression that Ruby understands.  Example usage:
@@ -38,19 +51,15 @@ class TruthTable
       @results << @expression.call(*entry)
     end
   end
-  
-  def to_s
-    string = @variables.join("\t") + "\t#{@formula}\n"
-  
-    @values.each_with_index do |entry, i|
-      entry.each do |value|
-        string << "#{value}\t"
-      end
-  
-      string << @results[i].to_s << "\n"
+
+  def to_table
+    header = @variables << @formula
+    table_data = @values.zip(@results).map { |a| a[0] << a[1] }
+    table = table_data.map do |a|
+      row = {}
+      a.each_with_index { |v, i| row[header[i]] = v }
+      row
     end
-    
-    string << "\n"
   end
 
   private
@@ -69,3 +78,29 @@ class TruthTable
     return values
   end
 end
+
+option_parser = OptionParser.new do |opts|
+  opts.banner = 'Usage: ./truthtable "(a && b) || c"'
+  opts.on_tail('-h', '-?', '--help', 'brief help message') do
+    puts opts
+    exit
+  end
+end
+
+option_parser.parse!
+
+if ARGV.length != 1
+  puts "One argument required"
+  puts option_parser.help
+  exit(-1)
+end
+
+begin  
+  tp.set :capitalize_headers, false
+  tp.set :max_width, 80
+  tp TruthTable.new(ARGV.shift).to_table
+rescue
+  puts option_parser.help
+  exit(-1)
+end
+

@@ -1,6 +1,0 @@
-History.txt
-Manifest.txt
-README.txt
-Rakefile
-bin/truthtable
-lib/truthtable.rb
